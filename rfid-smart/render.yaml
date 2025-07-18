@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: rfid-backend
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn rfid_smart.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: rfid_smart.settings
