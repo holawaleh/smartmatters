@@ -22,7 +22,7 @@ loginForm.addEventListener('submit', function(e) {
     // Simple validation for demo
     if (username === validCredentials.username && password === validCredentials.password) {
         // Set login session
-        sessionStorage.setItem('biotime_logged_in', 'true');
+        sessionStorage.setItem('eaccess_logged_in', 'true');
         showSuccessMessage();
         setTimeout(() => {
             window.location.href = 'index.html';

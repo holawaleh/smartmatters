@@ -7,7 +7,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #a8a8a8 0%, #d3d3d3 100%);
+    background-color: #667eea;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -35,7 +35,7 @@ body {
 
 /* Header Styles */
 .login-header {
-    background: linear-gradient(135deg, #a8a8a8 0%, #d3d3d3 100%);
+    background: linear-gradient(135deg, #ccc 0%, #e0e0e0 100%);
     padding: 3rem 0;
     text-align: center;
 }
@@ -48,14 +48,14 @@ body {
 }
 
 .time-green {
-    color: #7cb342;
+    color: #667eea;
     font-weight: 400;
 }
 
 /* Main Content Styles */
 .login-content {
     flex: 1;
-    background: linear-gradient(135deg, #7cb342 0%, #8bc34a 100%);
+    background: #667eea;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -110,9 +110,9 @@ body {
 
 .form-input:focus {
     outline: none;
-    border-color: #7cb342;
+    border-color: #667eea;
     background: white;
-    box-shadow: 0 0 0 3px rgba(124, 179, 66, 0.1);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .form-input::placeholder {
@@ -153,8 +153,8 @@ body {
 
 .option-btn {
     background: none;
-    border: 2px solid #7cb342;
-    color: #7cb342;
+    border: 2px solid #667eea;
+    color: #667eea;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -167,20 +167,20 @@ body {
 }
 
 .option-btn:hover {
-    background: #7cb342;
+    background: #667eea;
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(124, 179, 66, 0.3);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
 /* Footer Styles */
 .login-footer {
-    background: linear-gradient(135deg, #a8a8a8 0%, #d3d3d3 100%);
+    background: linear-gradient(135deg, #ccc 0%, #e0e0e0 100%);
     padding: 2rem;
     text-align: center;
 }
 
-.zkteco-logo {
+.smart-logo {
     font-size: 2rem;
     font-weight: 700;
     color: #666;
@@ -189,7 +189,7 @@ body {
 }
 
 .eco-green {
-    color: #7cb342;
+    color: #667eea;
 }
 
 .copyright {
@@ -199,13 +199,13 @@ body {
 }
 
 .footer-link {
-    color: #7cb342;
+    color: #667eea;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .footer-link:hover {
-    color: #689f38;
+    color: #5465d1;
     text-decoration: underline;
 }
 
@@ -269,7 +269,7 @@ body {
 .modal-title {
     font-size: 1.5rem;
     font-weight: 300;
-    color: #7cb342;
+    color: #667eea;
     margin-bottom: 2rem;
     text-align: center;
 }
@@ -281,7 +281,7 @@ body {
 .confirm-btn {
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg, #7cb342 0%, #8bc34a 100%);
+    background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -292,9 +292,9 @@ body {
 }
 
 .confirm-btn:hover {
-    background: linear-gradient(135deg, #689f38 0%, #7cb342 100%);
+    background: #5465d1;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(124, 179, 66, 0.3);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
 /* Success Message */
@@ -335,23 +335,23 @@ body {
     .login-page {
         padding: 1rem;
     }
-    
+
     .biotime-title {
         font-size: 3rem;
     }
-    
+
     .login-content {
         padding: 2rem 1rem;
     }
-    
+
     .admin-section {
         padding: 2rem;
     }
-    
+
     .admin-title {
         font-size: 1.5rem;
     }
-    
+
     .modal-content {
         padding: 1.5rem;
         margin: 1rem;
@@ -362,15 +362,15 @@ body {
     .biotime-title {
         font-size: 2.5rem;
     }
-    
+
     .admin-section {
         padding: 1.5rem;
     }
-    
-    .zkteco-logo {
+
+    .smart-logo {
         font-size: 1.5rem;
     }
-    
+
     .copyright {
         font-size: 0.8rem;
     }

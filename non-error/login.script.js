@@ -6,11 +6,68 @@ const closeModal = document.getElementById('closeModal');
 const superuserForm = document.getElementById('superuserForm');
 const successMessage = document.getElementById('successMessage');
 
-// Demo credentials
-const validCredentials = {
-    username: 'admin',
-    password: 'admin123'
-};
+// Simulated user database (will be replaced by Django backend)
+const users = [
+    {
+        id: 1,
+        username: 'admin',
+        password: 'admin123',
+        email: 'admin@esmart.edu',
+        role: 'superuser',
+        first_name: 'System',
+        last_name: 'Administrator',
+        is_active: true,
+        date_joined: '2024-01-01'
+    },
+    {
+        id: 2,
+        username: 'teacher1',
+        password: 'teacher123',
+        email: 'teacher1@esmart.edu',
+        role: 'teacher',
+        first_name: 'John',
+        last_name: 'Smith',
+        is_active: true,
+        date_joined: '2024-01-15'
+    },
+    {
+        id: 3,
+        username: 'staff1',
+        password: 'staff123',
+        email: 'staff1@esmart.edu',
+        role: 'staff',
+        first_name: 'Jane',
+        last_name: 'Doe',
+        is_active: true,
+        date_joined: '2024-02-01'
+    }
+];
+
+// Authentication functions (will be replaced by Django API calls)
+function authenticateUser(username, password) {
+    const user = users.find(u => 
+        u.username === username && 
+        u.password === password && 
+        u.is_active
+    );
+    return user || null;
+}
+
+function createUser(userData) {
+    const newUser = {
+        id: users.length + 1,
+        username: userData.username,
+        password: userData.password,
+        email: userData.email || '',
+        role: 'staff',
+        first_name: '',
+        last_name: '',
+        is_active: true,
+        date_joined: new Date().toISOString().split('T')[0]
+    };
+    users.push(newUser);
+    return newUser;
+}
 
 // Login Form Handler
 loginForm.addEventListener('submit', function(e) {
@@ -19,10 +76,20 @@ loginForm.addEventListener('submit', function(e) {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     
-    // Simple validation for demo
-    if (username === validCredentials.username && password === validCredentials.password) {
-        // Set login session
-        sessionStorage.setItem('biotime_logged_in', 'true');
+    // Authenticate user
+    const user = authenticateUser(username, password);
+    
+    if (user) {
+        // Set login session with user data
+        sessionStorage.setItem('eaccess_logged_in', 'true');
+        sessionStorage.setItem('eaccess_user', JSON.stringify({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            first_name: user.first_name,
+            last_name: user.last_name
+        }));
         showSuccessMessage();
         setTimeout(() => {
             window.location.href = 'index.html';
@@ -66,6 +133,12 @@ superuserForm.addEventListener('submit', function(e) {
         return;
     }
     
+    // Check if username already exists
+    if (users.find(u => u.username === username)) {
+        showErrorMessage('Username already exists');
+        return;
+    }
+    
     if (password !== confirmPassword) {
         showErrorMessage('Passwords do not match');
         return;
@@ -76,7 +149,13 @@ superuserForm.addEventListener('submit', function(e) {
         return;
     }
     
-    // Simulate superuser creation
+    // Create new user
+    const newUser = createUser({
+        username: username,
+        email: email,
+        password: password
+    });
+    
     showSuccessMessage('Superuser created successfully!');
     createSuperuserModal.style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -174,7 +253,7 @@ window.addEventListener('load', function() {
     document.getElementById('username').focus();
 });
 
-// Demo hint
+// Demo hint with multiple user credentials
 setTimeout(() => {
     if (!document.querySelector('.demo-hint')) {
         const hint = document.createElement('div');
@@ -182,7 +261,12 @@ setTimeout(() => {
         hint.innerHTML = `
             <div class="hint-content">
                 <i class="fas fa-info-circle"></i>
-                <span>Demo Login: admin / admin123</span>
+                <div class="hint-text">
+                    <div><strong>Demo Logins:</strong></div>
+                    <div>Admin: admin / admin123</div>
+                    <div>Teacher: teacher1 / teacher123</div>
+                    <div>Staff: staff1 / staff123</div>
+                </div>
                 <button class="hint-close">&times;</button>
             </div>
         `;
@@ -199,9 +283,10 @@ setTimeout(() => {
                 color: white;
                 padding: 1rem;
                 border-radius: 8px;
-                box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+                box-shadow: 0 5px 15px rgba(103, 33, 243, 0.3);
                 z-index: 1001;
                 animation: slideUp 0.3s ease;
+                max-width: 250px;
             }
             
             .hint-content {
@@ -209,6 +294,16 @@ setTimeout(() => {
                 align-items: center;
                 gap: 0.5rem;
                 font-weight: 600;
+                font-size: 0.85rem;
+            }
+            
+            .hint-text {
+                flex: 1;
+                line-height: 1.4;
+            }
+            
+            .hint-text div:first-child {
+                margin-bottom: 0.25rem;
             }
             
             .hint-close {
@@ -217,10 +312,10 @@ setTimeout(() => {
                 color: white;
                 font-size: 1.2rem;
                 cursor: pointer;
-                margin-left: 1rem;
                 padding: 0.25rem;
                 border-radius: 50%;
                 transition: background-color 0.3s ease;
+                flex-shrink: 0;
             }
             
             .hint-close:hover {
@@ -243,6 +338,7 @@ setTimeout(() => {
                     left: 1rem;
                     right: 1rem;
                     bottom: 1rem;
+                    max-width: none;
                 }
             }
         `;
