@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioTime 8.0 - Attendance Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Logout Button -->
+  <div class="logout-container">
+    <button id="logoutBtn" class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i>
+      Logout
+    </button>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="logo">ZKTeco</div>
+        <nav class="nav">
+          <a href="#" class="nav-link">Personnel</a>
+          <a href="#" class="nav-link">Device</a>
+          <a href="#" class="nav-link active">Attendance</a>
+          <a href="#" class="nav-link">Access Control</a>
+          <a href="#" class="nav-link">Payroll</a>
+          <a href="#" class="nav-link">Visitor</a>
+          <a href="#" class="nav-link">Meeting</a>
+          <a href="#" class="nav-link">MTD</a>
+          <a href="#" class="nav-link">System</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <div class="notification">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">6</span>
+        </div>
+        <div class="user-menu">
+          <i class="fas fa-user"></i>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <main class="dashboard">
+    <div class="dashboard-container">
+      <!-- Top Row Cards -->
+      <div class="cards-grid">
+        <!-- Present/Absent Chart -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Present</h3>
+            <div class="card-actions">
+              <button class="action-btn"><i class="fas fa-sync-alt"></i></button>
+              <button class="action-btn"><i class="fas fa-chart-bar"></i></button>
+              <button class="action-btn"><i class="fas fa-download"></i></button>
+              <button class="action-btn"><i class="fas fa-cog"></i></button>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="chart-container">
+              <div class="chart-title">Today</div>
+              <div class="pie-chart-container">
+                <canvas id="pieChart" width="180" height="180"></canvas>
+                <div class="chart-legend">
+                  <div class="legend-item">
+                    <div class="legend-color present"></div>
+                    <span>Present: 2627 (99.85%)</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-color absent"></div>
+                    <span>Absent: 4 (0.15%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance Exception Chart -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Attendance Exception</h3>
+            <div class="card-actions">
+              <button class="action-btn"><i class="fas fa-sync-alt"></i></button>
+              <button class="action-btn"><i class="fas fa-chart-bar"></i></button>
+              <button class="action-btn"><i class="fas fa-download"></i></button>
+              <button class="action-btn"><i class="fas fa-cog"></i></button>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="chart-legend-horizontal">
+              <div class="legend-item">
+                <div class="legend-color late"></div>
+                <span>Late</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color early-leave"></div>
+                <span>Early-Leave</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color absent"></div>
+                <span>Absent</span>
+              </div>
+            </div>
+            <canvas id="lineChart" width="400" height="180"></canvas>
+          </div>
+        </div>
+
+        <!-- Real-Time Monitor -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Real-Time Monitor</h3>
+            <div class="card-actions">
+              <button class="action-btn"><i class="fas fa-sync-alt"></i></button>
+              <button class="action-btn"><i class="fas fa-chart-bar"></i></button>
+              <button class="action-btn"><i class="fas fa-download"></i></button>
+              <button class="action-btn"><i class="fas fa-cog"></i></button>
+            </div>
+          </div>
+          <div class="card-content">
+            <div class="realtime-stats">
+              <div class="stat-number">2</div>
+              <div class="stat-label">Active Now</div>
+            </div>
+            <canvas id="barChart" width="400" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attendance Records Table -->
+      <div class="card table-card">
+        <div class="card-header">
+          <h3>Recent Attendance Records</h3>
+          <div class="card-actions">
+            <button class="action-btn"><i class="fas fa-sync-alt"></i></button>
+            <button class="action-btn"><i class="fas fa-chart-bar"></i></button>
+            <button class="action-btn"><i class="fas fa-download"></i></button>
+            <button class="action-btn"><i class="fas fa-cog"></i></button>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="table-container">
+            <table class="attendance-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Action</th>
+                  <th>Time</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTableBody">
+                <!-- Table rows will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
