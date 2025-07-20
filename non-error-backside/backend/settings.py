@@ -1,22 +1,19 @@
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 from decouple import config
-
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'si)_b6$^7u5sk_svajff8z*7&=w(kw7rl4%ucx^f2p4tsa!rfs')
+SECRET_KEY = config('SECRET_KEY', default='si)_b6$^7u5sk_svajff8z*7&=w(kw7rl4%ucx^f2p4tsa!rfs')
 
-# Use True/False from env or fallback to False for production
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
     'smartmat-backend.onrender.com',
-    '127.0.0.1',
+    '127.0.0.1', 
     'localhost',
 ]
 
@@ -35,7 +32,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Move CORS middleware to the top
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,20 +68,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+# Database - Using MongoDB with djongo
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'smartmat_db',
+        'NAME': config('DB_NAME', default='smartmat_db'),
         'CLIENT': {
-            'host': config('MONGODB_URI')
+            'host': config('MONGODB_URI'),
         }
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# Custom User Model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -101,24 +99,23 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Africa/Lagos'
 USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS settings (add these if you need them)
+# CORS settings
 CORS_ALLOW_ALL_ORIGINS = True  # Only for development
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-#     "http://127.0.0.1:3000",
-# ]
+CORS_ALLOW_CREDENTIALS = True
+
+# Additional security settings for production
+if not DEBUG:
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
