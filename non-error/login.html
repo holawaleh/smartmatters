@@ -10,20 +10,15 @@
 </head>
 
 <body>
-  <!-- Login Page -->
   <div id="loginPage" class="login-page">
     <div class="login-container">
-      <!-- Header -->
       <div class="login-header">
         <h1 class="biotime-title">e-<span class="time-green">Access</span> 8.0</h1>
       </div>
 
-      <!-- Main Content -->
       <div class="login-content">
         <div class="admin-section">
           <h2 class="admin-title">Admin</h2>
-
-          <!-- Login Form -->
           <form id="loginForm" class="login-form">
             <div class="form-group">
               <input type="text" id="username" placeholder="Username" class="form-input" required />
@@ -32,28 +27,24 @@
               <input type="password" id="password" placeholder="Password" class="form-input" required />
             </div>
             <button type="submit" class="login-btn">
-              <i class="fas fa-sign-in-alt"></i>
-              Login
+              <i class="fas fa-sign-in-alt"></i> Login
             </button>
           </form>
 
-          <!-- Additional Options -->
           <div class="login-options">
             <button class="option-btn" id="createSuperuserBtn">
-              <i class="fas fa-user-plus"></i>
-              Create Superuser
+              <i class="fas fa-user-plus"></i> Create Superuser
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Footer -->
       <div class="login-footer">
         <div class="smart-logo">e-<span class="eco-green">SMART</span></div>
         <div class="copyright">
-          <a href="#" class="footer-link">About</a> |
-          <a href="#" class="footer-link">Forgot Password</a> |
-          <a href="#" class="footer-link">Student Attendance</a>
+          <a href="#">About</a> |
+          <a href="#">Forgot Password</a> |
+          <a href="#">Student Attendance</a>
         </div>
       </div>
     </div>
@@ -64,9 +55,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <div class="modal-logo">e-<span class="eco-green">SMART</span></div>
-        <button class="modal-close" id="closeModal">
-          <i class="fas fa-times"></i>
-        </button>
+        <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
       </div>
       <h3 class="modal-title">Create Superuser</h3>
       <form id="superuserForm" class="superuser-form">
@@ -91,15 +80,13 @@
     </div>
   </div>
 
-  <!-- Success Message -->
-  <div id="successMessage" class="success-message">
+  <div id="successMessage" class="success-message" style="display: none;">
     <div class="success-content">
       <i class="fas fa-check-circle"></i>
-      <span>Login successful! Redirecting to dashboard...</span>
+      <span></span>
     </div>
   </div>
 
-  <!-- Error Message -->
   <div id="errorMessage" class="error-message" style="display: none;">
     <div class="error-content">
       <i class="fas fa-exclamation-circle"></i>
@@ -107,7 +94,6 @@
     </div>
   </div>
 
-  <!-- Link JS -->
   <script src="login-script.js"></script>
 </body>
 
