@@ -30,7 +30,8 @@ loginForm.addEventListener("submit", async function (e) {
 
     showSuccess(`Welcome, ${data.username}`);
     setTimeout(() => {
-      window.location.href = data.is_superuser ? "admin-dashboard.html" : "index.html";
+      wwindow.location.href = "index.html";
+
     }, 2000);
   } catch (err) {
     showError(err.message);
