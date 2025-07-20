@@ -92,3 +92,7 @@ function showError(msg) {
   errorMessage.style.display = "block";
   setTimeout(() => (errorMessage.style.display = "none"), 3000);
 }
+
+if (data.is_superuser) {
+  window.location.href = "index.html"; // Your dashboard page
+}
