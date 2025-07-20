@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>e-Access - Login</title>
-  <link rel="stylesheet" href="login-styles.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="login-styles.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -26,10 +26,10 @@
           <!-- Login Form -->
           <form id="loginForm" class="login-form">
             <div class="form-group">
-              <input type="text" id="username" placeholder="Username" class="form-input" required>
+              <input type="text" id="username" placeholder="Username" class="form-input" required />
             </div>
             <div class="form-group">
-              <input type="password" id="password" placeholder="Password" class="form-input" required>
+              <input type="password" id="password" placeholder="Password" class="form-input" required />
             </div>
             <button type="submit" class="login-btn">
               <i class="fas fa-sign-in-alt"></i>
@@ -51,7 +51,6 @@
       <div class="login-footer">
         <div class="smart-logo">e-<span class="eco-green">SMART</span></div>
         <div class="copyright">
-          <!-- Copyright ©2025 e-SMART CO. LTD All rights reserved. -->
           <a href="#" class="footer-link">About</a> |
           <a href="#" class="footer-link">Forgot Password</a> |
           <a href="#" class="footer-link">Student Attendance</a>
@@ -73,19 +72,19 @@
       <form id="superuserForm" class="superuser-form">
         <div class="form-group">
           <label for="superUsername">Username*</label>
-          <input type="text" id="superUsername" class="form-input" required>
+          <input type="text" id="superUsername" class="form-input" required />
         </div>
         <div class="form-group">
           <label for="superEmail">Email</label>
-          <input type="email" id="superEmail" class="form-input">
+          <input type="email" id="superEmail" class="form-input" />
         </div>
         <div class="form-group">
           <label for="superPassword">Password*</label>
-          <input type="password" id="superPassword" class="form-input" required>
+          <input type="password" id="superPassword" class="form-input" required />
         </div>
         <div class="form-group">
           <label for="confirmPassword">Confirm Password*</label>
-          <input type="password" id="confirmPassword" class="form-input" required>
+          <input type="password" id="confirmPassword" class="form-input" required />
         </div>
         <button type="submit" class="confirm-btn">Confirm</button>
       </form>
@@ -100,6 +99,15 @@
     </div>
   </div>
 
+  <!-- Error Message -->
+  <div id="errorMessage" class="error-message" style="display: none;">
+    <div class="error-content">
+      <i class="fas fa-exclamation-circle"></i>
+      <span id="errorText">Something went wrong.</span>
+    </div>
+  </div>
+
+  <!-- Link JS -->
   <script src="login-script.js"></script>
 </body>
 

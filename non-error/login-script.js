@@ -12,30 +12,85 @@ const validCredentials = {
     password: 'admin123'
 };
 
-// Login Form Handler
-loginForm.addEventListener('submit', function(e) {
+loginForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    
+
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    
-    // Simple validation for demo
-    if (username === validCredentials.username && password === validCredentials.password) {
-        // Set login session
-        sessionStorage.setItem('eaccess_logged_in', 'true');
-        showSuccessMessage();
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 2000);
-    } else {
-        showErrorMessage('Invalid username or password');
+
+    try {
+        const response = await fetch("http://localhost:8000/api/auth/login/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+        });
+
+        if (!response.ok) throw new Error("Login failed");
+
+        const data = await response.json();
+
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("is_superuser", data.is_superuser);
+
+        if (data.is_superuser) {
+            showSuccessMessage("Superuser login successful! Redirecting...");
+            setTimeout(() => {
+                window.location.href = "admin-dashboard.html";
+            }, 2000);
+        } else {
+            showSuccessMessage("Login successful! Redirecting...");
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 2000);
+        }
+
+    } catch (error) {
+        showErrorMessage("Invalid username or password");
+        console.error(error);
     }
 });
 
-// Create Superuser Modal
-createSuperuserBtn.addEventListener('click', function() {
-    createSuperuserModal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
+superuserForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById('superUsername').value;
+    const email = document.getElementById('superEmail').value;
+    const password = document.getElementById('superPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (!username || !password || !confirmPassword) {
+        showErrorMessage('Please fill in all required fields');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showErrorMessage('Passwords do not match');
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:8000/api/auth/register-superuser/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Registration failed");
+        }
+
+        showSuccessMessage("Superuser created successfully!");
+        createSuperuserModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        superuserForm.reset();
+
+    } catch (error) {
+        showErrorMessage(error.message);
+        console.error(error);
+    }
 });
 
 closeModal.addEventListener('click', function() {

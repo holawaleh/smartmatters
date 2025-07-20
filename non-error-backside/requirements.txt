@@ -1,0 +1,6 @@
+pip freeze > requirements.txt
+django
+djangorestframework
+gunicorn
+mysqlclient    # or psycopg2 if using PostgreSQL
+python-dotenv
