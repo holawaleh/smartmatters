@@ -1,6 +1,9 @@
 # pip freeze > requirements.txt
-django
-djangorestframework
+Django>=4.0
 gunicorn
-mysqlclient    # or psycopg2 if using PostgreSQL
-python-dotenv
+whitenoise
+django-cors-headers
+djangorestframework
+psycopg2-binary
+python-decouple
+pillow
