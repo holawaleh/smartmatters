@@ -98,3 +98,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const loginForm = document.getElementById("loginForm");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        const response = await fetch("https://smartmat-backend.onrender.com/api/auth/login/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        if (!response.ok) throw new Error("Login failed");
+        const data = await response.json();
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("username", data.username);
+        window.location.href = "index.html";
+      } catch (err) {
+        alert("Invalid credentials");
+      }
+    });
+  }
+});
