@@ -1,24 +1,707 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard - eAccess</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-Access School Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-  <header>
-    <h1>Welcome to eAccess</h1>
-    <button id="logoutBtn">Logout</button>
-  </header>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <h1>e-Access</h1>
+        </div>
+        <div class="user-info">
+          <span>Welcome, Admin</span>
+          <button class="btn btn-outline" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
 
-  <main>
-    <p>You are now logged in.</p>
-    <!-- Add your dashboard content here -->
-  </main>
+    <!-- Navigation -->
+    <nav class="navigation">
+      <div class="nav-container">
+        <div class="nav-tabs">
+          <button class="nav-tab active" onclick="showTab('students')">
+            <i class="fas fa-users"></i>
+            Students (<span id="studentCount">0</span>)
+          </button>
+          <button class="nav-tab" onclick="showTab('profile')">
+            <i class="fas fa-user"></i>
+            Profile
+          </button>
+          <button class="nav-tab" onclick="showTab('courses')">
+            <i class="fas fa-book"></i>
+            Course Registration
+          </button>
+          <button class="nav-tab" onclick="showTab('logs')">
+            <i class="fas fa-clock"></i>
+            Activity Logs
+          </button>
+          <button class="nav-tab" onclick="showTab('analytics')">
+            <i class="fas fa-chart-pie"></i>
+            Analytics
+          </button>
+          <button class="nav-tab" onclick="showTab('settings')">
+            <i class="fas fa-cog"></i>
+            Settings
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Students Tab -->
+      <div id="students" class="tab-content active">
+        <div class="tab-header">
+          <h2>Student Management</h2>
+          <div class="tab-actions">
+            <div class="search-container">
+              <input type="text" id="searchInput" placeholder="Search students..." onkeyup="searchStudents()">
+              <i class="fas fa-search"></i>
+            </div>
+            <button class="btn btn-primary" onclick="openStudentForm()">
+              <i class="fas fa-plus"></i>
+              Add Student
+            </button>
+          </div>
+        </div>
+        <div class="students-grid" id="studentsGrid"></div>
+        <div class="empty-state" id="emptyState">
+          <i class="fas fa-users"></i>
+          <h3>No Students Found</h3>
+          <p>Start by adding your first student to the system</p>
+          <button class="btn btn-primary" onclick="openStudentForm()">
+            <i class="fas fa-plus"></i>
+            Add Student
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Tab -->
+      <div id="profile" class="tab-content">
+        <div class="tab-header">
+          <h2>Student Profile</h2>
+        </div>
+        <div id="profileContent">
+          <div class="empty-state">
+            <i class="fas fa-user"></i>
+            <h3>No Student Selected</h3>
+            <p>Select a student from the Students tab to view their profile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Registration Tab -->
+      <div id="courses" class="tab-content">
+        <div class="tab-header">
+          <h2>Course Registration</h2>
+          <div class="tab-actions">
+            <button class="btn btn-primary" onclick="openCourseForm()">
+              <i class="fas fa-plus"></i>
+              Add Course
+            </button>
+          </div>
+        </div>
+        <div class="courses-container">
+          <div class="courses-section">
+            <h3>Available Courses</h3>
+            <div class="courses-grid" id="coursesGrid"></div>
+            <div class="empty-state" id="coursesEmptyState" style="display: none;">
+              <i class="fas fa-book"></i>
+              <h3>No Courses Available</h3>
+              <p>Add courses to start registering students</p>
+            </div>
+          </div>
+          <div class="registration-section">
+            <h3>Student Registration</h3>
+            <div class="registration-form">
+              <select id="studentSelect" onchange="loadStudentCourses()">
+                <option value="">Select a student...</option>
+              </select>
+              <div class="registered-courses" id="registeredCourses"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Logs Tab -->
+      <div id="logs" class="tab-content">
+        <div class="tab-header">
+          <h2>Activity Logs</h2>
+          <div class="tab-actions">
+            <button class="btn btn-secondary" onclick="exportLogs()">
+              <i class="fas fa-download"></i>
+              Export
+            </button>
+          </div>
+        </div>
+        <div class="log-filters">
+          <input type="text" id="logSearch" placeholder="Search activities..." onkeyup="filterLogs()">
+          <select id="actionFilter" onchange="filterLogs()">
+            <option value="all">All Actions</option>
+            <option value="Student Registered">Student Registered</option>
+            <option value="Profile Updated">Profile Updated</option>
+            <option value="Profile Viewed">Profile Viewed</option>
+            <option value="Course Registered">Course Registered</option>
+            <option value="Course Dropped">Course Dropped</option>
+          </select>
+          <select id="dateFilter" onchange="filterLogs()">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+          </select>
+        </div>
+        <div class="log-stats">
+          <div class="stat-card">
+            <h3 id="totalActivities">0</h3>
+            <p>Total Activities</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="totalRegistrations">0</h3>
+            <p>Registrations</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="totalUpdates">0</h3>
+            <p>Updates</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="totalViews">0</h3>
+            <p>Profile Views</p>
+          </div>
+        </div>
+        <div class="activity-log" id="activityLog"></div>
+        <div class="empty-state" id="logEmptyState" style="display: none;">
+          <i class="fas fa-clock"></i>
+          <h3>No Activity Logs</h3>
+          <p>Activity logs will appear here as you use the system</p>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div id="analytics" class="tab-content">
+        <div class="tab-header">
+          <h2>Analytics Dashboard</h2>
+        </div>
+        <div class="analytics-container">
+          <div class="chart-section">
+            <div class="chart-card">
+              <h3>Activity Distribution</h3>
+              <canvas id="pieChart"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>Monthly Activity Trends</h3>
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+          <div class="analytics-stats">
+            <div class="stat-card">
+              <h3 id="totalStudentsAnalytics">0</h3>
+              <p>Total Students</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="totalCoursesAnalytics">0</h3>
+              <p>Total Courses</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="activeRegistrations">0</h3>
+              <p>Active Registrations</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="avgCoursesPerStudent">0</h3>
+              <p>Avg Courses/Student</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings" class="tab-content">
+        <div class="tab-header">
+          <h2>System Settings</h2>
+        </div>
+        <div class="settings-container">
+          <div class="settings-actions">
+            <button class="btn btn-primary" onclick="exportData()">
+              <i class="fas fa-download"></i>
+              Export Data
+            </button>
+            <label for="importFile" class="btn btn-secondary">
+              <i class="fas fa-upload"></i>
+              Import Data
+            </label>
+            <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display: none;">
+            <button class="btn btn-danger" onclick="clearAllData()">
+              <i class="fas fa-trash"></i>
+              Clear All Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Student Modal -->
+    <div class="modal" id="studentModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Add New Student</h3>
+          <button class="close-btn" onclick="closeStudentForm()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="studentForm">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" required>
+            <div class="error-message" id="fullNameError"></div>
+          </div>
+          <div class="form-group">
+            <label for="matricNo">Matric Number</label>
+            <input type="text" id="matricNo" placeholder="e.g., CSC2021001 or CSC/2021/001" required>
+            <div class="error-message" id="matricNoError"></div>
+          </div>
+          <div class="form-group">
+            <label for="phoneNo">Phone Number</label>
+            <input type="text" id="phoneNo" placeholder="e.g., +1234567890" required>
+            <div class="error-message" id="phoneNoError"></div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required>
+            <div class="error-message" id="emailError"></div>
+          </div>
+          <div class="form-group">
+            <label for="cardNo">Student Card Number</label>
+            <input type="text" id="cardNo" placeholder="e.g., STU123456 or 123456789" required>
+            <div class="error-message" id="cardNoError"></div>
+          </div>
+          <div class="form-group">
+            <label for="photoInput">Student Photo</label>
+            <div class="photo-upload">
+              <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)">
+              <div class="photo-preview" id="photoPreview">
+                <i class="fas fa-camera"></i>
+              </div>
+              <button type="button" class="btn btn-danger" id="removePhotoBtn" onclick="removePhoto()"
+                style="display: none;">
+                Remove Photo
+              </button>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeStudentForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Add Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Course Modal -->
+    <div class="modal" id="courseModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="courseModalTitle">Add New Course</h3>
+          <button class="close-btn" onclick="closeCourseForm()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="courseForm">
+          <div class="form-group">
+            <label for="courseCode">Course Code</label>
+            <input type="text" id="courseCode" placeholder="e.g., CSC101" required>
+            <div class="error-message" id="courseCodeError"></div>
+          </div>
+          <div class="form-group">
+            <label for="courseTitle">Course Title</label>
+            <input type="text" id="courseTitle" required>
+            <div class="error-message" id="courseTitleError"></div>
+          </div>
+          <div class="form-group">
+            <label for="credits">Credits</label>
+            <input type="number" id="credits" min="1" max="6" required>
+            <div class="error-message" id="creditsError"></div>
+          </div>
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" id="department" required>
+            <div class="error-message" id="departmentError"></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeCourseForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="courseSubmitBtn">Add Course</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+      <i class="fas fa-check-circle"></i>
+      <span id="successText">Success!</span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
+
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <h1>e-Access</h1>
+        </div>
+        <div class="user-info">
+          <span>Welcome, Admin</span>
+          <button class="btn btn-outline" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+      <div class="nav-container">
+        <div class="nav-tabs">
+          <button class="nav-tab active" onclick="showTab('students')">
+            <i class="fas fa-users"></i>
+            Students (<span id="studentCount">0</span>)
+          </button>
+          <button class="nav-tab" onclick="showTab('profile')">
+            <i class="fas fa-user"></i>
+            Profile
+          </button>
+          <button class="nav-tab" onclick="showTab('courses')">
+            <i class="fas fa-book"></i>
+            Course Registration
+          </button>
+          <button class="nav-tab" onclick="showTab('logs')">
+            <i class="fas fa-clock"></i>
+            Activity Logs
+          </button>
+          <button class="nav-tab" onclick="showTab('analytics')">
+            <i class="fas fa-chart-pie"></i>
+            Analytics
+          </button>
+          <button class="nav-tab" onclick="showTab('settings')">
+            <i class="fas fa-cog"></i>
+            Settings
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Students Tab -->
+      <div id="students" class="tab-content active">
+        <div class="tab-header">
+          <h2>Student Management</h2>
+          <div class="tab-actions">
+            <div class="search-container">
+              <input type="text" id="searchInput" placeholder="Search students..." onkeyup="searchStudents()">
+              <i class="fas fa-search"></i>
+            </div>
+            <button class="btn btn-primary" onclick="openStudentForm()">
+              <i class="fas fa-plus"></i>
+              Add Student
+            </button>
+          </div>
+        </div>
+        <div class="students-grid" id="studentsGrid"></div>
+        <div class="empty-state" id="emptyState">
+          <i class="fas fa-users"></i>
+          <h3>No Students Found</h3>
+          <p>Start by adding your first student to the system</p>
+          <button class="btn btn-primary" onclick="openStudentForm()">
+            <i class="fas fa-plus"></i>
+            Add Student
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Tab -->
+      <div id="profile" class="tab-content">
+        <div class="tab-header">
+          <h2>Student Profile</h2>
+        </div>
+        <div id="profileContent">
+          <div class="empty-state">
+            <i class="fas fa-user"></i>
+            <h3>No Student Selected</h3>
+            <p>Select a student from the Students tab to view their profile</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Registration Tab -->
+      <div id="courses" class="tab-content">
+        <div class="tab-header">
+          <h2>Course Registration</h2>
+          <div class="tab-actions">
+            <button class="btn btn-primary" onclick="openCourseForm()">
+              <i class="fas fa-plus"></i>
+              Add Course
+            </button>
+          </div>
+        </div>
+        <div class="courses-container">
+          <div class="courses-section">
+            <h3>Available Courses</h3>
+            <div class="courses-grid" id="coursesGrid"></div>
+            <div class="empty-state" id="coursesEmptyState" style="display: none;">
+              <i class="fas fa-book"></i>
+              <h3>No Courses Available</h3>
+              <p>Add courses to start registering students</p>
+            </div>
+          </div>
+          <div class="registration-section">
+            <h3>Student Registration</h3>
+            <div class="registration-form">
+              <select id="studentSelect" onchange="loadStudentCourses()">
+                <option value="">Select a student...</option>
+              </select>
+              <div class="registered-courses" id="registeredCourses"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Logs Tab -->
+      <div id="logs" class="tab-content">
+        <div class="tab-header">
+          <h2>Activity Logs</h2>
+          <div class="tab-actions">
+            <button class="btn btn-secondary" onclick="exportLogs()">
+              <i class="fas fa-download"></i>
+              Export
+            </button>
+          </div>
+        </div>
+        <div class="log-filters">
+          <input type="text" id="logSearch" placeholder="Search activities..." onkeyup="filterLogs()">
+          <select id="actionFilter" onchange="filterLogs()">
+            <option value="all">All Actions</option>
+            <option value="Student Registered">Student Registered</option>
+            <option value="Profile Updated">Profile Updated</option>
+            <option value="Profile Viewed">Profile Viewed</option>
+            <option value="Course Registered">Course Registered</option>
+            <option value="Course Dropped">Course Dropped</option>
+          </select>
+          <select id="dateFilter" onchange="filterLogs()">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+          </select>
+        </div>
+        <div class="log-stats">
+          <div class="stat-card">
+            <h3 id="totalActivities">0</h3>
+            <p>Total Activities</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="totalRegistrations">0</h3>
+            <p>Registrations</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="totalUpdates">0</h3>
+            <p>Updates</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="totalViews">0</h3>
+            <p>Profile Views</p>
+          </div>
+        </div>
+        <div class="activity-log" id="activityLog"></div>
+        <div class="empty-state" id="logEmptyState" style="display: none;">
+          <i class="fas fa-clock"></i>
+          <h3>No Activity Logs</h3>
+          <p>Activity logs will appear here as you use the system</p>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div id="analytics" class="tab-content">
+        <div class="tab-header">
+          <h2>Analytics Dashboard</h2>
+        </div>
+        <div class="analytics-container">
+          <div class="chart-section">
+            <div class="chart-card">
+              <h3>Activity Distribution</h3>
+              <canvas id="pieChart"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>Monthly Activity Trends</h3>
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+          <div class="analytics-stats">
+            <div class="stat-card">
+              <h3 id="totalStudentsAnalytics">0</h3>
+              <p>Total Students</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="totalCoursesAnalytics">0</h3>
+              <p>Total Courses</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="activeRegistrations">0</h3>
+              <p>Active Registrations</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="avgCoursesPerStudent">0</h3>
+              <p>Avg Courses/Student</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings" class="tab-content">
+        <div class="tab-header">
+          <h2>System Settings</h2>
+        </div>
+        <div class="settings-container">
+          <div class="settings-actions">
+            <button class="btn btn-primary" onclick="exportData()">
+              <i class="fas fa-download"></i>
+              Export Data
+            </button>
+            <label for="importFile" class="btn btn-secondary">
+              <i class="fas fa-upload"></i>
+              Import Data
+            </label>
+            <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="display: none;">
+            <button class="btn btn-danger" onclick="clearAllData()">
+              <i class="fas fa-trash"></i>
+              Clear All Data
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Student Modal -->
+    <div class="modal" id="studentModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Add New Student</h3>
+          <button class="close-btn" onclick="closeStudentForm()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="studentForm">
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" required>
+            <div class="error-message" id="fullNameError"></div>
+          </div>
+          <div class="form-group">
+            <label for="matricNo">Matric Number</label>
+            <input type="text" id="matricNo" placeholder="e.g., CSC2021001 or CSC/2021/001" required>
+            <div class="error-message" id="matricNoError"></div>
+          </div>
+          <div class="form-group">
+            <label for="phoneNo">Phone Number</label>
+            <input type="text" id="phoneNo" placeholder="e.g., +1234567890" required>
+            <div class="error-message" id="phoneNoError"></div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" required>
+            <div class="error-message" id="emailError"></div>
+          </div>
+          <div class="form-group">
+            <label for="cardNo">Student Card Number</label>
+            <input type="text" id="cardNo" placeholder="e.g., STU123456 or 123456789" required>
+            <div class="error-message" id="cardNoError"></div>
+          </div>
+          <div class="form-group">
+            <label for="photoInput">Student Photo</label>
+            <div class="photo-upload">
+              <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)">
+              <div class="photo-preview" id="photoPreview">
+                <i class="fas fa-camera"></i>
+              </div>
+              <button type="button" class="btn btn-danger" id="removePhotoBtn" onclick="removePhoto()"
+                style="display: none;">
+                Remove Photo
+              </button>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeStudentForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn">Add Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Course Modal -->
+    <div class="modal" id="courseModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="courseModalTitle">Add New Course</h3>
+          <button class="close-btn" onclick="closeCourseForm()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <form id="courseForm">
+          <div class="form-group">
+            <label for="courseCode">Course Code</label>
+            <input type="text" id="courseCode" placeholder="e.g., CSC101" required>
+            <div class="error-message" id="courseCodeError"></div>
+          </div>
+          <div class="form-group">
+            <label for="courseTitle">Course Title</label>
+            <input type="text" id="courseTitle" required>
+            <div class="error-message" id="courseTitleError"></div>
+          </div>
+          <div class="form-group">
+            <label for="credits">Credits</label>
+            <input type="number" id="credits" min="1" max="6" required>
+            <div class="error-message" id="creditsError"></div>
+          </div>
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" id="department" required>
+            <div class="error-message" id="departmentError"></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeCourseForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="courseSubmitBtn">Add Course</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+      <i class="fas fa-check-circle"></i>
+      <span id="successText">Success!</span>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
