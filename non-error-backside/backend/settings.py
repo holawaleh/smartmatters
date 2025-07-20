@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from decouple import config
 
 load_dotenv()
 
@@ -13,8 +14,11 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'si)_b6$^7u5sk_svajff8z*7&=w(kw7rl4%ucx^f2p
 # Use True/False from env or fallback to False for production
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# Comma-separated string from .env becomes list
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    'smartmat-backend.onrender.com',
+    '127.0.0.1',
+    'localhost',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -67,12 +71,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'smartmat_db',
+        'CLIENT': {
+            'host': config('MONGODB_URI')
+        }
     }
 }
 
