@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: e-smart-backend
+    name: smartmat-backend
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn backend.wsgi:application"
-    envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: backend.settings
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py migrate --noinput
+    startCommand: gunicorn backend.wsgi
