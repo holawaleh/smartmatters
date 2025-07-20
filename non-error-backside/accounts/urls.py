@@ -1,10 +1,9 @@
-# accounts/urls.py
 from django.urls import path
-from accounts.views import home_view, SuperuserRegisterView
-from rest_framework.authtoken.views import obtain_auth_token
+from .views import SuperuserRegisterView, CustomAuthToken, ProtectedPingView, home_view
 
 urlpatterns = [
-    path('', home_view),  # for api/auth/
-    path('login/', obtain_auth_token, name='login'),
-    path('register-superuser/', SuperuserRegisterView.as_view(), name='register-superuser'),
+    path('', home_view),                              # GET /api/auth/
+    path('register/', SuperuserRegisterView.as_view()),  # POST /api/auth/register/
+    path('login/', CustomAuthToken.as_view()),           # POST /api/auth/login/
+    path('protected/', ProtectedPingView.as_view()),     # GET /api/auth/protected/
 ]
